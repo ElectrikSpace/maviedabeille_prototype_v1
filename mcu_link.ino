@@ -19,11 +19,11 @@
     String poids1;
     String poids2;
     int i;
-    int espPin = 6;
+    int mosfet = 10;
 
     void setup()
     {
-      pinMode(espPin, OUTPUT);
+      pinMode(mosfet, OUTPUT);
       ESP8266.begin(9600);  
       HC12.begin(9600);
       Serial.begin(9600);
@@ -33,16 +33,16 @@
    
     void loop()
     {
-     digitalWrite(espPin, HIGH); 
+     digitalWrite(mosfet, HIGH); 
       //reception donnees de HC12
-      while( (temps+600000) > millis() && hcend == 0){
+      while( (temps+600000) > millis() && hcend < 2){
         while (HC12.available()) {
           incomingByte = HC12.read();
          // Serial.print(incomingByte);
            if (isAlpha(incomingByte)) {
             switch (incomingByte) {
               case 'g':
-                hcend = 1;
+                hcend = 3;
                 variableWrite = 0;
               break;
               case 'z':
@@ -95,13 +95,9 @@
             }
          }
            }
+           hcend++;
    }
-   if (hcend == 1){
-    HC12.print("y");
-   }
-   else if (hcend == 0){
-    HC12.print("n");
-   }
+  
       //Serial.print("temperature");
      // Serial.print(temperature);
      // Serial.print("humidite");
@@ -135,15 +131,16 @@
       envoieAuESP8266("AT+CWQAP");
       recoitDuESP8266(1000); 
       delay(100);
-      digitalWrite(espPin, LOW);
+      digitalWrite(mosfet, LOW);
 
     //remise à zero
     temperature = "";
     humidite = "";
     luminosite = "";
     voltage = "";
-    poids1   = "";
+    poids1 = "";
     poids2 = "";
+    hcend = 0;
 
     //mise en veille
     for (i=0; i <= 412; i++){

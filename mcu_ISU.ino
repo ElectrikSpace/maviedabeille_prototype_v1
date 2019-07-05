@@ -1,6 +1,6 @@
 #include "DHT.h"
 #include <SoftwareSerial.h>
-#define DHTPIN 3   
+#define DHTPIN 11   
 #define DHTTYPE DHT22
 #include <Wire.h>
 #include <RTClibExtended.h>
@@ -10,14 +10,14 @@
 
 RTC_DS3231 RTC;      //we are using the DS3231 RTC
 DHT dht(DHTPIN, DHTTYPE);
-SoftwareSerial HC12(4, 5); // HC-12 TX Pin, HC-12 RX Pin
+SoftwareSerial HC12(5, 4); // HC-12 TX Pin, HC-12 RX Pin
 HX711 scale1(6, 7);
 HX711 scale2(8, 9);
 const int npn = 10;
-const float calibration_factor1;
-const float zero_factor1;
-const float calibration_factor2;
-const float zero_factor2;
+const float calibration_factor1 = 22500;
+const float zero_factor1 = -123000;
+const float calibration_factor2 = 22500;
+const float zero_factor2 = -123000;
 float UbatBin; //valeur
 float UbatVol; //voltage
 float photoResistorBin; //valeur
@@ -56,7 +56,7 @@ void setup() {
  RTC.alarmInterrupt(2, false);
  RTC.writeSqwPinMode(DS3231_OFF);
  //Set alarm1 every hours
- RTC.setAlarm(ALM1_MATCH_MINUTES, 0, 0, 0, 0); 
+ RTC.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0); 
  RTC.alarmInterrupt(1, true);
 }
 
@@ -81,7 +81,7 @@ void loop() {
   RTC.alarmInterrupt(1, true); //rearmement alarme
   delay(1);
   
-  //allumage des instruments puis delai attente
+  //allumage des instruments puis delais attente
   digitalWrite(npn, HIGH);
   delay(2000);
   
@@ -90,8 +90,8 @@ void loop() {
   humidite = dht.readHumidity();
   UbatBin = analogRead(A3);
   photoResistorBin = analogRead(A2);
-  poids1 = scale1.get_units(), 5;
-  poids2 = scale2.get_units(), 5;
+  poids1 = scale1.get_units(), 10;
+  poids2 = scale2.get_units(), 10;
   
   //traitement des donnees a traiter
   UbatVol = voltage(UbatBin);
