@@ -4,8 +4,8 @@
     SoftwareSerial HC12(2, 3); // HC-12 TX Pin, HC-12 RX Pin
     SoftwareSerial ESP8266(5, 6);
 
-    String NomduReseauWifi = "Freebox-ABC6E7"; // Garder les guillements
-    String MotDePasse = "inferent-apologum-decircinat-licium"; // Garder les guillements
+    String NomduReseauWifi = "Freebox-5F5237"; // Garder les guillements
+    String MotDePasse = "exectus-fictionem.2-feris2-leunculo@"; // Garder les guillements
    // String httpGet = "";
     String taille;
     String taille2;
@@ -45,10 +45,10 @@
       HC12.listen();
       int hcend = 0;
       long int temps = millis(); 
-      while( (temps+3300000) > millis() && hcend < 2){
+      while( (temps+3900000) > millis() && hcend < 2){
         while (HC12.available()) {
           incomingByte = HC12.read();
-         // Serial.print(incomingByte);
+          Serial.print(incomingByte);
            if (isAlpha(incomingByte)) {
             switch (incomingByte) {
               case 'g':
@@ -107,7 +107,6 @@
            }
           
    }
-  /*
       Serial.print("temperature");
       Serial.println(temperature);
       Serial.print("humidite");
@@ -120,7 +119,7 @@
       Serial.println(voltage);
       Serial.print("luminosite");
       Serial.println(luminosite);
-    */ 
+     
       //envoi par wifi
       float po1 = poids1.toFloat();
       float te = temperature.toFloat();
@@ -173,13 +172,13 @@
       String lum = String(lu, DEC); */
      
   //    String test = "GET /emoncms/input/post?node=emontx&fulljson={\"poidsruche1\":" + poids1 + ",\"poidsruche2\":" + poids2 + ",\"temperature\":" + temperature + ",\"humidite\":" + humidite + ",\"luminosite\":" + luminosite + ",\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
-      String httpget = "GET /emoncms/input/post?node=emontx&fulljson={\"poidsruche1\":" + poids1 + ",\"poidsruche2\":" + poids2 + ",\"temperature\":" + temperature + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
-      String httpget2 = "GET /emoncms/input/post?node=emontx&fulljson={\"humidite\":" + humidite + ",\"luminosite\":" + luminosite + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
-     // String httpget3 = "GET /emoncms/input/post?node=emontx&fulljson={\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+      String httpget = "GET /emoncms/input/post?node=emontx&fulljson={\"poidsruche1\":" + poids1 + ",\"poidsruche2\":" + poids2 + ",\"luminosite\":" + luminosite + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+      String httpget2 = "GET /emoncms/input/post?node=emontx&fulljson={\"humidite\":" + humidite + ",\"temperature\":" + temperature + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+      //String httpget3 = "GET /emoncms/input/post?node=emontx&fulljson={\"luminosite\":" + luminosite + ",\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
       delay(100);
       taille = httpget.length() + 4;
       taille2 = httpget2.length() + 4;
-     
+     // taille3 = httpget3.length() + 4;
     //  Serial.println(httpget);
      // Serial.println(httpget2);
      // Serial.println(httpget3);
@@ -202,12 +201,10 @@
       recoitDuESP8266(1000);
       envoieAuESP8266("AT+CIPCLOSE");
       recoitDuESP8266(2000); 
-      httpget = "";
-      httpget2 = "";
       delay(100);
       String httpget3 = "GET /emoncms/input/post?node=emontx&fulljson={\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
-       delay(100);
       taille3 = httpget3.length() + 4;
+      delay(100);
       envoieAuESP8266("AT+CIPSTART=\"TCP\",\"78.200.224.32\",80");
       recoitDuESP8266(3000);
       envoieAuESP8266("AT+CIPSEND=" + taille3);   
@@ -216,8 +213,7 @@
       envoieAuESP8266(httpget3);
       recoitDuESP8266(1000);
       envoieAuESP8266("AT+CIPCLOSE");
-      recoitDuESP8266(2000);
-       httpget3 = "";
+      recoitDuESP8266(2000); 
       envoieAuESP8266("AT+CWQAP");
       recoitDuESP8266(2000);
       Serial.println("fin de l envoi");

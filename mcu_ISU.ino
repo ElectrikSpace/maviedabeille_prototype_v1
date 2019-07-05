@@ -57,7 +57,7 @@ void setup() {
  RTC.alarmInterrupt(2, false);
  RTC.writeSqwPinMode(DS3231_OFF);
  //Set alarm1 every hours
- RTC.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0); 
+ RTC.setAlarm(ALM1_MATCH_MINUTES, 0, 0, 0, 0); 
  RTC.alarmInterrupt(1, true);
 }
 
