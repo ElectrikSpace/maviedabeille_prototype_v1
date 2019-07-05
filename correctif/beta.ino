@@ -86,7 +86,7 @@ delay(1000);
   RTC.clearAlarm(1);
   RTC.alarmInterrupt(1, false); //rearmement alarme
  delay(100);
-  //  Serial.println("sortie de veille");
+   // Serial.println("sortie de veille");
   
   //allumage des instruments puis delais attente
   digitalWrite(npn, HIGH);
@@ -162,8 +162,11 @@ delay(100);
   delay(3000);
   transmition++;
   }
-  delay(100);
+  delay(500);
  // Serial.println("fin de la transmission");
+ RTC.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0); 
+ RTC.alarmInterrupt(1, true);
+ delay(500);
 }
 
 float voltage(int valeurBinaire)

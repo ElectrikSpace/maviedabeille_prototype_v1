@@ -162,8 +162,11 @@ delay(100);
   delay(3000);
   transmition++;
   }
-  delay(100);
+  delay(500);
  // Serial.println("fin de la transmission");
+ RTC.setAlarm(ALM1_MATCH_SECONDS, 0, 0, 0, 0); 
+ RTC.alarmInterrupt(1, true);
+ delay(500);
 }
 
 float voltage(int valeurBinaire)
