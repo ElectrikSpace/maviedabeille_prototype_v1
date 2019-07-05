@@ -77,7 +77,8 @@ void loop() {
   transmition = 0;
   //veille
    // Serial.println("mise ne veille");
-  
+   delay(1000);
+   alarmReset();
    delay(1000);
   attachInterrupt(0, wakeUp, LOW); //debut de la veille
   LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
@@ -165,8 +166,6 @@ delay(100);
   }
   delay(500);
  // Serial.println("fin de la transmission");
- RTC.setAlarm(ALM1_MATCH_MINUTES, 0, 0, 0, 0);
- RTC.alarmInterrupt(1, true);
  delay(500);
 }
 
@@ -177,5 +176,21 @@ float voltage(int valeurBinaire)
 
 void wakeUp()        // here the interrupt is handled after wakeup
 {
+}
+void alarmReset()
+{
+  Wire.begin();
+ RTC.begin(); 
+// clear any pending alarms
+ RTC.armAlarm(1, false);
+ RTC.clearAlarm(1);
+ RTC.alarmInterrupt(1, false);
+ RTC.armAlarm(2, false);
+ RTC.clearAlarm(2);
+ RTC.alarmInterrupt(2, false);
+ RTC.writeSqwPinMode(DS3231_OFF);
+ //Set alarm1 every hours
+ RTC.setAlarm(ALM1_MATCH_MINUTES, 0, 0, 0, 0);
+ RTC.alarmInterrupt(1, true);
 }
 
