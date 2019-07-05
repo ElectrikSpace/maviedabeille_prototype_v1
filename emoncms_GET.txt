@@ -1,0 +1,1 @@
+GET /emoncms/input/post?node=emontx&fulljson={"power1":100,"power2":200,"power3":300}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1
