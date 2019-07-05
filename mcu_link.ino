@@ -9,6 +9,7 @@
    // String httpGet = "";
     String taille;
     String taille2;
+    String taille3;
     int hcend = 0;
     int variableWrite = 0;
     long int temps;
@@ -44,7 +45,7 @@
       HC12.listen();
       int hcend = 0;
       long int temps = millis(); 
-      while( (temps+600000) > millis() && hcend < 2){
+      while( (temps+3300000) > millis() && hcend < 2){
         while (HC12.available()) {
           incomingByte = HC12.read();
          // Serial.print(incomingByte);
@@ -158,12 +159,12 @@
       String p2 = String(poids2.toFloat());
       String vol = String(voltage.toFloat());
       String lum = String(luminosite.toFloat()); */
-      String temp = "1.05";
+     /* String temp = "1.05";
       String hum = "1";
       String p1 = "1";
       String p2 = "1";
       String vol = "1";
-      String lum = "1"; 
+      String lum = "1"; */
     /*  String temp = String(te, DEC);
       String hum = String(hu, DEC);
       String p1 = String(po1, DEC);
@@ -173,13 +174,15 @@
      
   //    String test = "GET /emoncms/input/post?node=emontx&fulljson={\"poidsruche1\":" + poids1 + ",\"poidsruche2\":" + poids2 + ",\"temperature\":" + temperature + ",\"humidite\":" + humidite + ",\"luminosite\":" + luminosite + ",\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
       String httpget = "GET /emoncms/input/post?node=emontx&fulljson={\"poidsruche1\":" + poids1 + ",\"poidsruche2\":" + poids2 + ",\"temperature\":" + temperature + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
-      String httpget2 = "GET /emoncms/input/post?node=emontx&fulljson={\"humidite\":" + humidite + ",\"luminosite\":" + luminosite + ",\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+      String httpget2 = "GET /emoncms/input/post?node=emontx&fulljson={\"humidite\":" + humidite + ",\"luminosite\":" + luminosite + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+     // String httpget3 = "GET /emoncms/input/post?node=emontx&fulljson={\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
       delay(100);
       taille = httpget.length() + 4;
-      taille2 = httpget.length() + 4;
-   //   Serial.println(httpget);
-      Serial.println(httpget);
-      Serial.println(httpget2);
+      taille2 = httpget2.length() + 4;
+     
+    //  Serial.println(httpget);
+     // Serial.println(httpget2);
+     // Serial.println(httpget3);
       delay(10);
       envoieAuESP8266("AT+CIPSTART=\"TCP\",\"78.200.224.32\",80");
       recoitDuESP8266(3000);
@@ -198,7 +201,23 @@
       envoieAuESP8266(httpget2);
       recoitDuESP8266(1000);
       envoieAuESP8266("AT+CIPCLOSE");
+      recoitDuESP8266(2000); 
+      httpget = "";
+      httpget2 = "";
+      delay(100);
+      String httpget3 = "GET /emoncms/input/post?node=emontx&fulljson={\"voltagebatterie\":" + voltage + "}&apikey=827120f283dcac11ff6094a86daa0995&HTTP/1.1";
+       delay(100);
+      taille3 = httpget3.length() + 4;
+      envoieAuESP8266("AT+CIPSTART=\"TCP\",\"78.200.224.32\",80");
+      recoitDuESP8266(3000);
+      envoieAuESP8266("AT+CIPSEND=" + taille3);   
+      recoitDuESP8266(1000);
+      delay(100);
+      envoieAuESP8266(httpget3);
+      recoitDuESP8266(1000);
+      envoieAuESP8266("AT+CIPCLOSE");
       recoitDuESP8266(2000);
+       httpget3 = "";
       envoieAuESP8266("AT+CWQAP");
       recoitDuESP8266(2000);
       Serial.println("fin de l envoi");
@@ -218,16 +237,17 @@
     hcend = 0;
        delay(100);
     //mise en veille
-      Serial.println("mise en veille");
-    for (i=0; i <= 0; i++){
-      delay(1);
-      LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
+  /*    Serial.println("mise en veille");
       delay(100);
-   
-      Serial.println("sortie de veille");
-      i = 0;
+    for (i=0; i <= 1; i++){
+      delay(10);
+      LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
+      delay(10);
+   }
+      Serial.println("sortie de veille"); */
+     setup(); 
    delay(100); 
-  } 
+   
     } 
    
     void initESP8266()
